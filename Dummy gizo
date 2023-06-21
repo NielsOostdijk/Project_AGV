@@ -1,5 +1,5 @@
 dummy van gizo
-dit bestand heb ik gewijzigd op 20-6
+dit bestand heb ik gewijzigd op 20-7
 
 
 #include <avr/io.h>
@@ -18,6 +18,7 @@ dit bestand heb ik gewijzigd op 20-6
 #define SOUND 34300
 #define LED PB1
 #define DRAAI_DIST 7
+#define knop PB2
 long duration;
 long distance_V;
 long distance_R;
@@ -37,6 +38,11 @@ void us_setup()
     DDRB &= ~(1 << USR_ECHO);
     DDRB |= (1 << USL_TRIGGER);
     DDRB &= ~(1 << USL_ECHO);
+}
+void knop()
+{
+DDRB &= ~(1<<knop);
+PORTB |= (1<<knop);
 }
 
 void usv_loop()
