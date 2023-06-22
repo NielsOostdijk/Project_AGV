@@ -2,12 +2,12 @@
 #include <util/delay.h>
 int main(void)
 {
-    DDRB |= (1<<PB7);
     DDRB |= (1<<PB6);
+    DDRB |= (1<<PB5);
     DDRF &= ~(1<<PF2);
 
-    PORTB &= ~(1<<PB7);
     PORTB &= ~(1<<PB6);
+    PORTB &= ~(1<<PB5);
     while(1)
     {
         int knop_ingedrukt = 0;
