@@ -1,0 +1,69 @@
+if (sensor_detec) //boom aan de zijkant links
+         {
+             while(sensor_detec)
+             {
+                 h_bridge1_set_percentage(0);
+                 h_bridge2_set_percentage(0);
+                 _delay_ms(5000);
+
+                 //sensor uitzetten totdat hij voorbij de boom is
+             }
+         }
+          if (sensor_detec) //boom aan de zijkant rechts
+         {
+             while(sensor_detec)
+             {
+                 h_bridge1_set_percentage(0);
+                 h_bridge2_set_percentage(0);
+                 _delay_ms(5000);
+
+                 //sensor uitzetten totdat hij voorbij de boom is
+             }
+         }
+         if (sensor_stop_detec) //sensor beneden zijkant (links), bocht maken
+         {
+             int x = 1;
+             int y = 1;
+             int z = 1;
+             int a = 1;
+             int b = 1;
+
+             while(x == 1)
+             {
+             h_bridge1_set_percentage(100);
+             h_bridge2_set_percentage(100);
+             // 5sec doorrijden
+             while (y == 1)
+                {
+                    h_bridge1_set_percentage(0);
+                    h_bridge2_set_percentage(100);
+                    //kwart draai maken
+                    while (z == 1)
+                    {
+                        h_bridge1_set_percentage(100);
+                        h_bridge2_set_percentage(100);
+                        //doorrijden tot de volgende kwart draai
+                        while (a == 1)
+                        {
+                            h_bridge1_set_percentage(0);
+                            h_bridge2_set_percentage(100);
+                            //kwart draai maken
+                            while (b == 1)
+                            {
+                                a = 0;
+                                b = 0;
+                                x = 0;
+                                y = 0;
+                                z = 0;
+                            }
+                        }
+                    }
+                }
+             }
+         }
+         else
+        {
+         h_bridge1_set_percentage(100); //wiel links
+         h_bridge2_set_percentage(100); //wiel rechts
+        }
+    }
