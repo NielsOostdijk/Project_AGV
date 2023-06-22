@@ -1,10 +1,14 @@
+DDRH |= (1<<PH6);
+
 if (sensor_detec) //boom aan de zijkant links
          {
              while(sensor_detec)
              {
                  h_bridge1_set_percentage(0);
                  h_bridge2_set_percentage(0);
+                  PORTH |= (1<<PH6);
                  _delay_ms(5000);
+                  PORTH &= ~(1<<PH6);
 
                  //sensor uitzetten totdat hij voorbij de boom is
              }
