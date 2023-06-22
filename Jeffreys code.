@@ -1,0 +1,6 @@
+#include <util/delay>
+int main (void)
+
+DDRA |= (1<<PA5);
+
+PORTA |=(1<<PA50);
