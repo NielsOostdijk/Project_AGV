@@ -71,3 +71,36 @@ if (sensor_detec) //boom aan de zijkant links
          h_bridge2_set_percentage(100); //wiel rechts
         }
     }
+void obstakel_det (void)
+{
+    if (agv_ultrasoon_voor <= 50)
+    {
+        //motoren uit
+        h_bridgeL(0);
+        h_bridgeR(0);
+        PORTE |= (1 << motorL_1);
+        PORTE &= ~(1 << motorL_2);
+        PORTE &= ~(1 << motorR_1);
+        PORTG |= (1 << motorR_2);
+    }
+    else if ((agv_ultrasoon_voor >= 50) && (agv_ultrasoon_voor <=100))
+    {
+        //motoren op 20% snelheid
+        h_bridgeL(30*overdracht_L);
+        h_bridgeR(30*overdracht_R);
+        PORTE |= (1 << motorL_1);
+        PORTE &= ~(1 << motorL_2);
+        PORTG &= ~(1 << motorR_1);
+        PORTE |= (1 << motorR_2);
+    }
+    else
+    {
+        //motoren op normale snelheid
+        h_bridgeL(60*overdracht_L);
+        h_bridgeR(60*overdracht_R);
+        PORTE |= (1 << motorL_1);
+        PORTE &= ~(1 << motorL_2);
+        PORTG &= ~(1 << motorR_1);
+        PORTE |= (1 << motorR_2);
+    }
+}
