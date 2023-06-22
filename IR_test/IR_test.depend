@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1687184014 source:c:\hhs\project_agv\ir_test\fuse.c
+	<avr/io.h>
+
+1687421042 source:c:\hhs\project_agv\ir_test\main.c
+	<avr/io.h>
+	<avr/interrupt.h>
+

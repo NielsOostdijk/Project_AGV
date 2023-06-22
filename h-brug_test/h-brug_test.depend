@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1687247107 source:c:\hhs\project_agv\h-brug_test\fuse.c
+	<avr/io.h>
+
+1687425546 source:c:\hhs\project_agv\h-brug_test\main.c
+	<avr/io.h>
+	<avr/interrupt.h>
+	<util/delay.h>
+	<stdlib.h>
+

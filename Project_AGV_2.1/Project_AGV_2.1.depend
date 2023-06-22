@@ -14,11 +14,12 @@
 
 1683553022 c:\hhs\project_agv\project_agv_2.1\h_bridge.h
 
-1683888820 source:c:\hhs\project_agv\project_agv_2.1\main.c
+1687422213 source:c:\hhs\project_agv\project_agv_2.1\main.c
 	<avr/io.h>
 	<util/delay.h>
 	<avr/interrupt.h>
-	"h_bridge.h"
+	"clock.h"
+	"agv_ultrasoon.h"
 
 1684156322 c:\hhs\project_agv\project_agv_2.1\clock.h
 
@@ -35,4 +36,10 @@
 1684156697 c:\hhs\project_agv\project_agv_2.1\h_bridge_r.h
 
 1684156697 c:\hhs\project_agv\project_agv_2.1\h_bridge_l.h
+
+1687353791 source:c:\hhs\project_agv\project_agv_2.1\agv_ultrasoon.c
+	<avr/interrupt.h>
+	<avr/io.h>
+
+1687175592 c:\hhs\project_agv\project_agv_2.1\agv_ultrasoon.h
 
