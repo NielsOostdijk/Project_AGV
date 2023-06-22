@@ -10,37 +10,8 @@
 #define motorR_2 PE3
 #define motorR_PWM PH3
 
-/*
-//vooruit
-        PORTE |= (1 << motorL_1);
-        PORTE &= ~(1 << motorL_2);
-        PORTG &= ~(1 << motorR_1);
-        PORTE |= (1 << motorR_2);
-//achteruit
-        PORTE |= (1 << motorL_1);
-        PORTE &= ~(1 << motorL_2);
-        PORTG &= ~(1 << motorR_1);
-        PORTE |= (1 << motorR_2);
-//rechts
-        PORTE &= ~(1 << motorL_2);
-        PORTE |= (1 << motorL_1);
-        PORTE &= ~(1 << motorR_2);
-        PORTG |= (1 << motorR_1);
-//links
-        PORTE |= (1 << motorL_2);
-        PORTE &= ~(1 << motorL_1);
-        PORTE |= (1 << motorR_2);
-        PORTG &= ~(1 << motorR_1);
-*/
 void init_h_brug (void)
 {
-       //timer PWM motorenR
-//    TCCR1A = (1<<COM1A1) | (1<<COM1A0) | (1<<COM1B1) | (1<<COM1B0) | (1<<COM1C1) | (1<<COM1C0) | (1<<WGM11) | (0<<WGM10); //COM1xn is de PWM instelling voor de pins
-//    TCCR1B = (1<<WGM13) | (1<<WGM12) | (0<<CS12) | (1<<CS11) | (0<<CS10); // CS1n is de prescaler 8 WGM1n is de PWM instelling voor timer 1 (fastPWM)
-//    OCR1A = 0;
-//    OCR1B = 0;
-//    OCR1C = 0;
-//    ICR1 = 1260;
 
     //timer PWM motorenL
     TCCR4A = (1<<COM4A1) | (1<<COM4A0) | (1<<COM4B1) | (1<<COM4B0) | (1<<COM4C1) | (1<<COM4C0) | (1<<WGM41) | (0<<WGM40); //COM1xn is de PWM instelling voor de pins
