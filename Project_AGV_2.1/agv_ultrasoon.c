@@ -40,15 +40,15 @@ ISR(TIMER3_CAPT_vect)
 {
     if(agv_ultrasoon_current_sensor == 0b00000001)
     {
-        agv_ultrasoon_LA = ((ICR3 - 4454)/4)*0.0343;
+        agv_ultrasoon_LA = ((ICR3 - 4454)/4)*0.343;
     }
     else if(agv_ultrasoon_current_sensor == 0b00000010)
     {
-        agv_ultrasoon_LV = ((ICR3 - 4454)/4)*0.0343;
+        agv_ultrasoon_LV = ((ICR3 - 4454)/4)*0.343;
     }
     else if(agv_ultrasoon_current_sensor == 0b00000100)
     {
-        agv_ultrasoon_voor = ((ICR3 - 4454)/4)*0.0343;
+        agv_ultrasoon_voor = ((ICR3 - 4454)/4)*0.343;
     }
     PCMSK2 = 0; //zet pin change uit voor rising edge
 }
@@ -57,15 +57,15 @@ ISR(PCINT2_vect)
 {
     if(agv_ultrasoon_current_sensor == 0b00000001)
     {
-        agv_ultrasoon_LA = ((TCNT3 - 4454)/4)*0.0343;
+        agv_ultrasoon_LA = ((TCNT3 - 4454)/4)*0.343;
     }
     else if(agv_ultrasoon_current_sensor == 0b00000010)
     {
-        agv_ultrasoon_LV = ((TCNT3 - 4454)/4)*0.0343;
+        agv_ultrasoon_LV = ((TCNT3 - 4454)/4)*0.343;
      }
     else if(agv_ultrasoon_current_sensor == 0b00000100)
     {
-        agv_ultrasoon_voor = ((TCNT3 - 4454)/4)*0.0343;
+        agv_ultrasoon_voor = ((TCNT3 - 4454)/4)*0.343;
     }
     TIMSK3 &= ~(1<<ICIE3); //zet timer3 overflow flag uit
     PCMSK2 = 0; //zet pin change uit voor rising edge

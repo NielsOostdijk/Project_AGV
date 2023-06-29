@@ -44,9 +44,7 @@
 */
 
 long duration;
-int lane = 0;
 int US_sens = 0;
-int rijden = 0;
 float overdracht_L;
 float overdracht_R;
 unsigned long long int boom_timer = 0;
@@ -54,15 +52,15 @@ unsigned long long int boom_timer = 0;
 void PIN_setup ()
 {
     DDRB |= (1<<LED);
-    PORTB |= (1<<LED);
-    DDRF |= (1<<IR_L);
-    DDRF |= (1<<IR_R);
+    PORTB &= ~(1<<LED);
+    DDRL &= ~(1<<IR_L);
+    DDRL &= ~(1<<IR_R);
 }
 
 void init_h_brug (void)
 {
     //timer PWM motoren
-    TCCR4A = (1<<COM4A1) | (1<<COM4A0) | (1<<COM4B1) | (1<<COM4B0) | (1<<COM4C1) | (1<<COM4C0) | (1<<WGM41) | (0<<WGM40); //COM1xn is de PWM instelling voor de pins
+    TCCR4A = (1<<COM4A1) | (0<<COM4A0) | (1<<COM4B1) | (0<<COM4B0) | (0<<COM4C1) | (0<<COM4C0) | (1<<WGM41) | (0<<WGM40); //COM1xn is de PWM instelling voor de pins
     TCCR4B = (1<<WGM43) | (1<<WGM42) | (0<<CS42) | (1<<CS41) | (0<<CS40); // CS1n is de prescaler 8 WGM1n is de PWM instelling voor timer 1 (fastPWM)
     OCR4A = 0;
     OCR4B = 0;
@@ -72,33 +70,33 @@ void init_h_brug (void)
     DDRH |= (1 << motorL_PWM);
     DDRE |= (1 << motorL_1);
     DDRE |= (1 << motorL_2);
-    DDRG |= (1 << motorR_1);
-    DDRE |= (1 << motorR_2);
+    DDRE |= (1 << motorR_1);
+    DDRG |= (1 << motorR_2);
     DDRH |= (1 << motorR_PWM);
 
     //H-brug pinnen LOW
-    PORTH &= ~(1 << motorL_PWM);
-	PORTE &= ~(1 << motorL_1);
-	PORTE &= ~(1 << motorL_2);
-	PORTG &= ~(1 << motorR_1);
-	PORTE &= ~(1 << motorR_2);
-	PORTH &= ~(1 << motorR_PWM);
-}
-
-void h_bridgeR(int PercentKracht)
-{
-	if ((PercentKracht >= 0) && (PercentKracht <= 100))
-        {
-            OCR4A = ((ICR4/100)*PercentKracht);
-        }
+//    PORTH &= ~(1 << motorL_PWM);
+//    PORTE &= ~(1 << motorL_1);
+//    PORTE &= ~(1 << motorL_2);
+//    PORTE &= ~(1 << motorR_1);
+//    PORTG &= ~(1 << motorR_2);
+//    PORTH &= ~(1 << motorR_PWM);
 }
 
 void h_bridgeL(int PercentKracht)
 {
-	if ((PercentKracht >= 0) && (PercentKracht <= 100))
-        {
-            OCR4B = ((ICR4/100)*PercentKracht);
-        }
+    if ((PercentKracht >= 0) && (PercentKracht <= 100))
+    {
+        OCR4A = ((ICR4/100)*PercentKracht);
+    }
+}
+
+void h_bridgeR(int PercentKracht)
+{
+    if ((PercentKracht >= 0) && (PercentKracht <= 100))
+    {
+        OCR4B = ((ICR4/100)*PercentKracht);
+    }
 }
 
 float PID (overdracht_L, overdracht_R)
@@ -112,166 +110,117 @@ float PID (overdracht_L, overdracht_R)
         overdracht_R = agv_ultrasoon_LA / agv_ultrasoon_LV;
     }
 }
-void draaien()
-{
-    if ((agv_ultrasoon_LV >= 100) && (agv_ultrasoon_LA >= 100))
-    {
-        h_bridgeL(0);
-        h_bridgeR(30*overdracht_R);
-        PORTE |= (1 << motorL_1);
-        PORTE &= ~(1 << motorL_2);
-        PORTE &= ~(1 << motorR_1);
-        PORTG |= (1 << motorR_2);
-    }
 
-    //draai 90* naar links
-}
-
-void boom_det (void)
+int main(void)
 {
-    if ((!(PINF & (1<<IR_R))) || (!(PINF & (1<<IR_L))))
+    //boom_det();
+    PIN_setup();
+    //draaien();
+    //draaien_2();
+    agv_ultrasoon_init();
+    //PID();
+    init_h_brug();
+    int rijden = 0;
+    int knop_rijden = 0;
+
+    while(1)
     {
-        boom_timer = time_current_ms(0);
-        if (time_current_ms(0) - boom_timer > 1500)
+//        if ((PINF & (1<<knop)) == 0)
+//        {
+//            h_bridgeL(50);
+//            h_bridgeR(50);
+//            PORTE |= (1 << motorL_1);
+//            PORTE &= ~(1 << motorL_2);
+//            PORTE |= (1 << motorR_1);
+//            PORTG &= ~(1 << motorR_2);
+//        }
+//        else
+//        {
+//            h_bridgeL(0);
+//            h_bridgeR(0);
+//            PORTE |= (1 << motorL_1);
+//            PORTE &= ~(1 << motorL_2);
+//            PORTE |= (1 << motorR_1);
+//            PORTG &= ~(1 << motorR_2);
+//        }
+
+
+        if ((PINF & (1<<knop)) == 0)
         {
-            //stop motoren
+            if (knop_rijden == 0)
+            {
+                rijden++;
+                knop_rijden = 1;
+            }
+        }
+        else
+        {
+            knop_rijden = 0;
+        }
+
+        if (rijden == 1)
+        {
+            if (agv_ultrasoon_voor >= 200)
+            {
+                PORTB &= ~(1<<LED);
+                h_bridgeL(50);
+                h_bridgeR(50);
+                PORTE |= (1 << motorL_1);
+                PORTE &= ~(1 << motorL_2);
+                PORTE |= (1 << motorR_1);
+                PORTG &= ~(1 << motorR_2);
+                if (((PINF & (1<<IR_R)) == 0) || ((PINF & (1<<IR_L)) == 0))
+                {
+                    boom_timer = time_current_ms(0);
+                    if (time_current_ms(0) - boom_timer > 1000)
+                    {
+                        //stop motoren
+                        h_bridgeL(0);
+                        h_bridgeR(0);
+                        PORTE |= (1 << motorL_1);
+                        PORTE &= ~(1 << motorL_2);
+                        PORTE |= (1 << motorR_1);
+                        PORTG &= ~(1 << motorR_2);
+                        PORTB |= (1<<LED);
+                    }
+                }
+            }
+            else
+            {
+                PORTB |= (1<<LED);
+                h_bridgeL(0);
+                h_bridgeR(0);
+                PORTE |= (1 << motorL_1);
+                PORTE &= ~(1 << motorL_2);
+                PORTE |= (1 << motorR_1);
+                PORTG &= ~(1 << motorR_2);
+            }
+
+        }
+        if (rijden == 2)
+        {
+            boom_timer = time_current_ms(0);
+            if (time_current_ms(0) - boom_timer > 2000)
+            {
+                h_bridgeL(0);
+                h_bridgeR(70);
+                PORTE |= (1 << motorL_1);
+                PORTE &= ~(1 << motorL_2);
+                PORTE |= (1 << motorR_1);
+                PORTG &= ~(1 << motorR_2);
+            }
+        }
+        if ((rijden != 1) && (rijden != 2))
+        {
             h_bridgeL(0);
             h_bridgeR(0);
             PORTE |= (1 << motorL_1);
             PORTE &= ~(1 << motorL_2);
-            PORTE &= ~(1 << motorR_1);
-            PORTG |= (1 << motorR_2);
-            PORTB &= ~(1<<LED);
+            PORTE |= (1 << motorR_1);
+            PORTG &= ~(1 << motorR_2);
         }
-    }
-    //als ir sensor iets detecteert
-        // alle motoren stoppen
-        //led gaat aan
-}
 
-void obstakel_det (void)
-{
-    if (agv_ultrasoon_voor <= 50)
-    {
-        //motoren uit
-        h_bridgeL(0);
-        h_bridgeR(0);
-        PORTE |= (1 << motorL_1);
-        PORTE &= ~(1 << motorL_2);
-        PORTE &= ~(1 << motorR_1);
-        PORTG |= (1 << motorR_2);
-    }
-    else if ((agv_ultrasoon_voor >= 50) && (agv_ultrasoon_voor <=100))
-    {
-        //motoren op 20% snelheid
-        h_bridgeL(30*overdracht_L);
-        h_bridgeR(30*overdracht_R);
-        PORTE |= (1 << motorL_1);
-        PORTE &= ~(1 << motorL_2);
-        PORTG &= ~(1 << motorR_1);
-        PORTE |= (1 << motorR_2);
-    }
-    else
-    {
-        //motoren op normale snelheid
-        h_bridgeL(60*overdracht_L);
-        h_bridgeR(60*overdracht_R);
-        PORTE |= (1 << motorL_1);
-        PORTE &= ~(1 << motorL_2);
-        PORTG &= ~(1 << motorR_1);
-        PORTE |= (1 << motorR_2);
-    }
-}
-void draaien_2 (void)
-{
-    if (agv_ultrasoon_LA <= 7)
-    {
-        if (US_sens == 0)
-        {
-           lane++;
-           US_sens = 1;
-        }
-    }
-    else
-    {
-        US_sens = 0;
-    }
-    if (lane == 3)
-    {
-        //naar links bewegen
-        h_bridgeL(0);
-        h_bridgeR(30*overdracht_R);
-        PORTE |= (1 << motorL_1);
-        PORTE &= ~(1 << motorL_2);
-        PORTE &= ~(1 << motorR_1);
-        PORTG |= (1 << motorR_2);
-    }
 
-}
-
-int main(void)
-{
-    boom_det();
-    PIN_setup();
-    draaien();
-    draaien_2();
-    agv_ultrasoon_init();
-    PID();
-    init_h_brug();
-
-    while(1)
-    {
-        switch (rijden)
-        {
-        case 0:
-            if((PINF && (1<<knop)) != 0)
-            {
-                rijden = 1;
-            }
-        case 1:
-            //beide motoren aan
-            h_bridgeL(60*overdracht_L);
-            h_bridgeR(60*overdracht_R);
-            PORTE |= (1 << motorL_1);
-            PORTE &= ~(1 << motorL_2);
-            PORTG &= ~(1 << motorR_1);
-            PORTE |= (1 << motorR_2);
-            boom_det();
-            rijden = 2;
-            break;
-        case 2:
-            draaien();
-            rijden = 3;
-            break;
-        case 3:
-            draaien_2();
-            rijden = 4;
-            break;
-        case 4:
-            //bijde motoren weer aan
-            h_bridgeL(60*overdracht_L);
-            h_bridgeR(60*overdracht_R);
-            PORTE |= (1 << motorL_1);
-            PORTE &= ~(1 << motorL_2);
-            PORTG &= ~(1 << motorR_1);
-            PORTE |= (1 << motorR_2);
-            boom_det();
-            rijden = 5;
-            break;
-        case 5:
-            //beide motoren aan
-            boom_det();
-            rijden = 6;
-            break;
-        case 6:
-            draaien();
-            rijden = 7;
-            break;
-        case 7:
-            draaien_2();
-            rijden = 0;
-            break;
-        }
     }
 
     return 0;
